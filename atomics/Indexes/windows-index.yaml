@@ -26105,7 +26105,7 @@ defense-evasion:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-04-15T19:59:20.277Z'
-      name: 'Use Alternate Authentication Material: Application Access Token'
+      name: Application Access Token
       description: "Adversaries may use stolen application access tokens to bypass
         the typical authentication process and access restricted accounts, information,
         or services on remote systems. These tokens are typically stolen from users
@@ -26182,7 +26182,6 @@ defense-evasion:
       x_mitre_version: '1.8'
       x_mitre_data_sources:
       - 'Web Credential: Web Credential Usage'
-      identifier: T1550.001
     atomic_tests: []
   T1078.004:
     technique:
@@ -30556,14 +30555,25 @@ privilege-escalation:
         Upon successful execution, cmd will modify the binpath for `Fax` to spawn powershell. Powershell will then spawn.
       supported_platforms:
       - windows
+      input_arguments:
+        service_name:
+          description: The name of the service that will be modified
+          type: string
+          default: Fax
+        service_binpath:
+          description: The default value for the binary path of the service
+          type: string
+          default: C:\WINDOWS\system32\fxssvc.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: |
-          sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1543.003 Test'\""
-          sc start Fax
-        cleanup_command: sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe" >nul
-          2>&1
+          sc config #{service_name} binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1543.003 Test'\""
+          sc start #{service_name}
+        cleanup_command: 'sc config #{service_name} binPath= "#{service_binpath}"
+          >nul 2>&1
+
+          '
     - name: Service Installation CMD
       auto_generated_guid: 981e2942-e433-44e9-afc1-8c957a1496b6
       description: |
@@ -50394,14 +50404,25 @@ persistence:
         Upon successful execution, cmd will modify the binpath for `Fax` to spawn powershell. Powershell will then spawn.
       supported_platforms:
       - windows
+      input_arguments:
+        service_name:
+          description: The name of the service that will be modified
+          type: string
+          default: Fax
+        service_binpath:
+          description: The default value for the binary path of the service
+          type: string
+          default: C:\WINDOWS\system32\fxssvc.exe
       executor:
         name: command_prompt
         elevation_required: true
         command: |
-          sc config Fax binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1543.003 Test'\""
-          sc start Fax
-        cleanup_command: sc config Fax binPath= "C:\WINDOWS\system32\fxssvc.exe" >nul
-          2>&1
+          sc config #{service_name} binPath= "C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -noexit -c \"write-host 'T1543.003 Test'\""
+          sc start #{service_name}
+        cleanup_command: 'sc config #{service_name} binPath= "#{service_binpath}"
+          >nul 2>&1
+
+          '
     - name: Service Installation CMD
       auto_generated_guid: 981e2942-e433-44e9-afc1-8c957a1496b6
       description: |
@@ -75854,7 +75875,7 @@ lateral-movement:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-04-15T19:59:20.277Z'
-      name: 'Use Alternate Authentication Material: Application Access Token'
+      name: Application Access Token
       description: "Adversaries may use stolen application access tokens to bypass
         the typical authentication process and access restricted accounts, information,
         or services on remote systems. These tokens are typically stolen from users
@@ -75931,7 +75952,6 @@ lateral-movement:
       x_mitre_version: '1.8'
       x_mitre_data_sources:
       - 'Web Credential: Web Credential Usage'
-      identifier: T1550.001
     atomic_tests: []
 credential-access:
   T1557:
@@ -83336,7 +83356,7 @@ credential-access:
       object_marking_refs:
       - marking-definition--fa42a846-8d90-4e51-bc29-71d5b4802168
       modified: '2025-04-15T22:03:00.834Z'
-      name: Cloud Secrets Management Stores
+      name: 'Credentials from Password Stores: Cloud Secrets Management Stores'
       description: "Adversaries may acquire credentials from cloud-native secret management
         solutions such as AWS Secrets Manager, GCP Secret Manager, Azure Key Vault,
         and Terraform Vault.  \n\nSecrets managers support the secure centralized
@@ -83372,6 +83392,7 @@ credential-access:
       x_mitre_version: '1.0'
       x_mitre_data_sources:
       - 'Cloud Service: Cloud Service Enumeration'
+      identifier: T1555.006
     atomic_tests: []
   T1003.008:
     technique:
@@ -86756,10 +86777,10 @@ discovery:
       - windows
       executor:
         command: |
-          net groups "Account Operators" /doma
-          net groups "Exchange Organization Management" /doma
-          net group "BUILTIN\Backup Operators" /doma
-          net group /domai "Domain Admins"
+          net groups "Account Operators" /domain
+          net groups "Exchange Organization Management" /domain
+          net group "BUILTIN\Backup Operators" /domain
+          net group "Domain Admins" /domain
         name: command_prompt
     - name: Find machines where user has local admin access (PowerView)
       auto_generated_guid: a2d71eee-a353-4232-9f86-54f4288dd8c1

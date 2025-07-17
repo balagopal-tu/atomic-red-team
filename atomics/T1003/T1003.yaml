@@ -41,6 +41,7 @@ atomic_tests:
       if(Invoke-WebRequestVerifyHash "#{gsecdump_url}" "$binpath" #{gsecdump_bin_hash}){
         Move-Item $binpath "#{gsecdump_exe}"
       }
+      Install-WindowsFeature Web-Scripting-Tools -IncludeAllSubFeature -IncludeManagementTools
       Import-Module WebAdministration
       Set-ItemProperty IIS:\AppPools\DefaultAppPool -Name processModel -Value @{
         identityType=3;

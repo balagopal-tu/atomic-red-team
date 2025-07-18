@@ -24,7 +24,6 @@ atomic_tests:
       powershell -Command "$time = (Get-Date).AddMinutes(1).ToString('HH:mm'); Write-Host \"Scheduling task for $time\"; schtasks /create /tn \"#{task_name}\" /tr \"cmd.exe\" /sc once /st $time /f"
     cleanup_command: |
       schtasks /delete /tn "#{task_name}" /f
-  dependency_executor_name: command_prompt
 - name: At - Schedule a job
   auto_generated_guid: 7266d898-ac82-4ec0-97c7-436075d0d08e
   description: |
